@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/mainScreenFragment">
+
+    <fragment
+        android:id="@+id/mainScreenFragment"
+        android:name="ru.alexander.twistthetongue.MainScreenFragment"
+        android:label="Main Menu"
+        tools:layout="@layout/fragment_main_screen" >
+        <action
+            android:id="@+id/action_mainScreenFragment_to_patterListFragment"
+            app:destination="@id/patterListFragment"
+            app:exitAnim="@anim/fade_out"
+            app:enterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popUpTo="@+id/patterListFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/patterListFragment"
+        android:name="ru.alexander.twistthetongue.ui.main.PatterListFragment"
+        android:label="PatterListFragment"
+        tools:layout="@layout/fragmnet_patter_list">
+        <action
+            android:id="@+id/action_patterListFragment_to_patterFragment"
+            app:destination="@id/patterFragment"
+            app:exitAnim="@anim/fade_out"
+            app:enterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popUpTo="@+id/patterFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/patterFragment"
+        android:name="ru.alexander.twistthetongue.ui.main.PatterFragment"
+        android:label="Patters"
+        tools:layout="@layout/twister_view">
+        <argument
+            android:name="patter"
+            app:argType="ru.alexander.twistthetongue.model.Patter" />
+    </fragment>
+
+</navigation>

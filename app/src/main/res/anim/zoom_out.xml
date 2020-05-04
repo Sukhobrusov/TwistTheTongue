@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<set xmlns:android="http://schemas.android.com/apk/res/android" android:duration="@integer/anim_duration">
+    <scale android:fromXScale="1.00"
+        android:toXScale="0.50"
+        android:fromYScale="1.00"
+        android:toYScale="0.50" />
+    <alpha android:fromAlpha="0"
+        android:toAlpha="1.00"/>
+</set>
