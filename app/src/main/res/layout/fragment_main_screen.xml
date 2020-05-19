@@ -13,7 +13,7 @@
 
         <com.google.android.material.button.MaterialButton
             app:backgroundTint="@color/white"
-            android:id="@+id/materialButton"
+            android:id="@+id/patterListButton"
             style="@style/Widget.MaterialComponents.Button.OutlinedButton"
             android:layout_width="0dp"
             android:layout_height="0dp"
@@ -24,14 +24,38 @@
             android:layout_marginBottom="16dp"
             android:layout_weight="1"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/materialButton2"
+            app:layout_constraintEnd_toStartOf="@+id/favoritePattersButton"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:strokeColor="@color/colorPrimaryDark" />
+        <TextView
+            android:id="@+id/textView1"
+            android:layout_margin="20dp"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:text="Patters"
+            android:textColor="@color/colorPrimaryDark"
+            android:textAllCaps="true"
+            app:layout_constraintEnd_toEndOf="@+id/patterListButton"
+            app:layout_constraintStart_toStartOf="@+id/patterListButton"
+            app:layout_constraintTop_toTopOf="@+id/patterListButton"
+            />
+        <ImageView
+            android:tint="@color/colorPrimaryDark"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_margin="32dp"
+            android:src="@drawable/ic_view_list"
+            app:layout_constraintBottom_toBottomOf="@id/patterListButton"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintEnd_toEndOf="@+id/patterListButton"
+            app:layout_constraintStart_toStartOf="@+id/patterListButton"
+            app:layout_constraintTop_toBottomOf="@+id/textView1" />
 
         <com.google.android.material.button.MaterialButton
             app:backgroundTint="@color/white"
-            android:id="@+id/materialButton2"
+            android:id="@+id/favoritePattersButton"
             style="@style/Widget.MaterialComponents.Button.OutlinedButton"
             android:layout_width="0dp"
             android:layout_height="0dp"
@@ -43,34 +67,9 @@
             android:layout_weight="1"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/materialButton"
+            app:layout_constraintStart_toEndOf="@+id/patterListButton"
             app:layout_constraintTop_toTopOf="parent"
             app:strokeColor="@color/colorPrimaryDark" />
-
-        <TextView
-            android:id="@+id/textView1"
-            android:layout_margin="20dp"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:gravity="center_horizontal"
-            android:text="Patters"
-            android:textColor="@color/colorPrimaryDark"
-            android:textAllCaps="true"
-            app:layout_constraintEnd_toEndOf="@+id/materialButton"
-            app:layout_constraintStart_toStartOf="@+id/materialButton"
-            app:layout_constraintTop_toTopOf="@+id/materialButton"
-            />
-        <ImageView
-            android:tint="@color/colorPrimaryDark"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_margin="32dp"
-            android:src="@drawable/ic_view_list"
-            app:layout_constraintBottom_toBottomOf="@id/materialButton"
-            app:layout_constraintDimensionRatio="1:1"
-            app:layout_constraintEnd_toEndOf="@+id/materialButton"
-            app:layout_constraintStart_toStartOf="@+id/materialButton"
-            app:layout_constraintTop_toBottomOf="@+id/textView1" />
 
         <TextView
             android:id="@+id/textView2"
@@ -81,9 +80,9 @@
             android:text="Favorites"
             android:textColor="@color/colorPrimaryDark"
             android:textAllCaps="true"
-            app:layout_constraintEnd_toEndOf="@+id/materialButton2"
-            app:layout_constraintStart_toStartOf="@+id/materialButton2"
-            app:layout_constraintTop_toTopOf="@+id/materialButton2"
+            app:layout_constraintEnd_toEndOf="@+id/favoritePattersButton"
+            app:layout_constraintStart_toStartOf="@+id/favoritePattersButton"
+            app:layout_constraintTop_toTopOf="@+id/favoritePattersButton"
             />
         <ImageView
             android:tint="@color/colorPrimaryDark"
@@ -91,10 +90,10 @@
             android:layout_height="0dp"
             android:layout_margin="32dp"
             android:src="@drawable/ic_star"
-            app:layout_constraintBottom_toBottomOf="@id/materialButton2"
+            app:layout_constraintBottom_toBottomOf="@id/favoritePattersButton"
             app:layout_constraintDimensionRatio="1:1"
-            app:layout_constraintEnd_toEndOf="@+id/materialButton2"
-            app:layout_constraintStart_toStartOf="@+id/materialButton2"
+            app:layout_constraintEnd_toEndOf="@+id/favoritePattersButton"
+            app:layout_constraintStart_toStartOf="@+id/favoritePattersButton"
             app:layout_constraintTop_toBottomOf="@+id/textView2" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -105,7 +104,7 @@
         android:orientation="horizontal">
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/materialButton3"
+            android:id="@+id/statisticsButton"
             style="@style/Widget.MaterialComponents.Button.OutlinedButton"
             android:layout_width="0dp"
             android:layout_height="0dp"
@@ -117,13 +116,13 @@
             app:backgroundTint="@color/white"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintDimensionRatio="1:1"
-            app:layout_constraintEnd_toStartOf="@+id/materialButton4"
+            app:layout_constraintEnd_toStartOf="@+id/informationButton"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:strokeColor="@color/colorPrimaryDark" />
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/materialButton4"
+            android:id="@+id/informationButton"
             style="@style/Widget.MaterialComponents.Button.OutlinedButton"
             android:layout_width="0dp"
             android:layout_height="0dp"
@@ -136,7 +135,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/materialButton3"
+            app:layout_constraintStart_toEndOf="@+id/statisticsButton"
             app:layout_constraintTop_toTopOf="parent"
             app:strokeColor="@color/colorPrimaryDark" />
 
@@ -149,9 +148,9 @@
             android:text="Info"
             android:textAllCaps="true"
             android:textColor="@color/colorPrimaryDark"
-            app:layout_constraintEnd_toEndOf="@+id/materialButton4"
-            app:layout_constraintStart_toStartOf="@+id/materialButton4"
-            app:layout_constraintTop_toTopOf="@+id/materialButton4" />
+            app:layout_constraintEnd_toEndOf="@+id/informationButton"
+            app:layout_constraintStart_toStartOf="@+id/informationButton"
+            app:layout_constraintTop_toTopOf="@+id/informationButton" />
 
         <ImageView
             android:tint="@color/colorPrimaryDark"
@@ -159,10 +158,10 @@
             android:layout_height="0dp"
             android:layout_margin="32dp"
             android:src="@drawable/ic_info"
-            app:layout_constraintBottom_toBottomOf="@id/materialButton4"
+            app:layout_constraintBottom_toBottomOf="@id/informationButton"
             app:layout_constraintDimensionRatio="1:1"
-            app:layout_constraintEnd_toEndOf="@+id/materialButton4"
-            app:layout_constraintStart_toStartOf="@+id/materialButton4"
+            app:layout_constraintEnd_toEndOf="@+id/informationButton"
+            app:layout_constraintStart_toStartOf="@+id/informationButton"
             app:layout_constraintTop_toBottomOf="@+id/textView4" />
 
         <TextView
@@ -174,9 +173,9 @@
             android:text="Progress"
             android:textAllCaps="true"
             android:textColor="@color/colorPrimaryDark"
-            app:layout_constraintEnd_toEndOf="@+id/materialButton3"
-            app:layout_constraintStart_toStartOf="@+id/materialButton3"
-            app:layout_constraintTop_toTopOf="@+id/materialButton3" />
+            app:layout_constraintEnd_toEndOf="@+id/statisticsButton"
+            app:layout_constraintStart_toStartOf="@+id/statisticsButton"
+            app:layout_constraintTop_toTopOf="@+id/statisticsButton" />
 
         <ImageView
             android:tint="@color/colorPrimaryDark"
@@ -184,10 +183,10 @@
             android:layout_height="0dp"
             android:layout_margin="32dp"
             android:src="@drawable/ic_check_box"
-            app:layout_constraintBottom_toBottomOf="@id/materialButton3"
+            app:layout_constraintBottom_toBottomOf="@id/statisticsButton"
             app:layout_constraintDimensionRatio="1:1"
-            app:layout_constraintEnd_toEndOf="@+id/materialButton3"
-            app:layout_constraintStart_toStartOf="@+id/materialButton3"
+            app:layout_constraintEnd_toEndOf="@+id/statisticsButton"
+            app:layout_constraintStart_toStartOf="@+id/statisticsButton"
             app:layout_constraintTop_toBottomOf="@+id/textView3" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

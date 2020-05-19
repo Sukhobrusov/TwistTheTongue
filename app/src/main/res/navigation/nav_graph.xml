@@ -19,12 +19,29 @@
             app:popExitAnim="@anim/fade_out"
             app:popEnterAnim="@anim/fade_in"
             app:popUpTo="@+id/patterListFragment" />
+
+        <action
+            android:id="@+id/action_mainScreenFragment_to_favoriteListFragment"
+            app:destination="@id/favoriteFragment"
+            app:exitAnim="@anim/fade_out"
+            app:enterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popUpTo="@+id/favoriteFragment" />
+        <action
+            android:id="@+id/action_mainScreenFragment_to_statisticsFragment"
+            app:destination="@id/statisticsFragment"
+            app:exitAnim="@anim/fade_out"
+            app:enterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popUpTo="@+id/statisticsFragment" />
     </fragment>
     <fragment
         android:id="@+id/patterListFragment"
         android:name="ru.alexander.twistthetongue.ui.main.PatterListFragment"
-        android:label="PatterListFragment"
-        tools:layout="@layout/fragmnet_patter_list">
+        android:label="Tongue Twisters"
+        tools:layout="@layout/fragment_patter_list">
         <action
             android:id="@+id/action_patterListFragment_to_patterFragment"
             app:destination="@id/patterFragment"
@@ -36,13 +53,35 @@
     </fragment>
 
     <fragment
+        android:id="@+id/favoriteFragment"
+        android:name="ru.alexander.twistthetongue.ui.main.FavoriteListFragment"
+        android:label="Favorites"
+        tools:layout="@layout/fragment_favorites">
+
+        <action
+            android:id="@+id/action_favoriteListFragment_to_patterFragment"
+            app:destination="@id/patterFragment"
+            app:exitAnim="@anim/fade_out"
+            app:enterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popUpTo="@+id/patterFragment" />
+    </fragment>
+
+    <fragment
         android:id="@+id/patterFragment"
         android:name="ru.alexander.twistthetongue.ui.main.PatterFragment"
-        android:label="Patters"
+        android:label="Tongue Twister"
         tools:layout="@layout/twister_view">
         <argument
             android:name="patter"
             app:argType="ru.alexander.twistthetongue.model.Patter" />
     </fragment>
+
+
+    <fragment
+        android:id="@+id/statisticsFragment"
+        android:name="ru.alexander.twistthetongue.ui.main.StatisticsFragment"
+        android:label="Statistics"/>
 
 </navigation>

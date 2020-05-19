@@ -9,16 +9,17 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
+import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
-import androidx.navigation.fragment.navArgs
 import kotlinx.android.synthetic.main.twister_view.view.*
 import ru.alexander.twistthetongue.R
 import ru.alexander.twistthetongue.model.Patter
-import ru.alexander.twistthetongue.viewmodels.MarkViewModel
+import ru.alexander.twistthetongue.network.MarkEvaluator
 import ru.alexander.twistthetongue.viewmodels.MediaPlayerViewModel
 import ru.alexander.twistthetongue.viewmodels.PatterListViewModel
 import java.io.File
@@ -28,10 +29,14 @@ class PatterFragment : Fragment() {
 
     private lateinit var patter: Patter
 
+    private var dialog : DialogFragment? = null
 
-    private val markViewModel: MarkViewModel by activityViewModels()
+    private lateinit var markEvaluator: MarkEvaluator
     private val mediaPlayerViewModel: MediaPlayerViewModel by activityViewModels()
     private val patterListViewModel : PatterListViewModel by activityViewModels()
+
+    private var isCached = false
+    private var isMarkReceived = false
 
     companion object {
         private const val PATTER_KEY = "patter"
@@ -52,14 +57,36 @@ class PatterFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val v = inflater.inflate(R.layout.twister_view, container, false)
+
         patter = arguments?.get(PATTER_KEY) as? Patter ?: return v
+        markEvaluator = MarkEvaluator()
         v.tongueTwisterTextView.text = patter.text
         v.currentMarkTextView.text = "${patter.mark}"
         v.favoriteButton.isChecked = patter.favorite
 
-        markViewModel.mark.observe(viewLifecycleOwner, Observer {
-            Log.d("Observing", " setting mark $it")
-            v.currentMarkTextView.text = "$it"
+        // when we receive the mark that has been calculated by markViewModel
+        markEvaluator.markReturn.observe(viewLifecycleOwner, Observer {
+            if (isAdded) {
+                Log.d("Observing", " setting mark $it")
+                isMarkReceived = true
+
+                if (it.mark != -1) {
+                    isCached = true
+
+                    patter.mark = it.mark
+                    patterListViewModel.update(patter)
+                    v.currentMarkTextView.text = "${it.mark}"
+
+                    dialog = MarkDialogFragment.newInstance(
+                        mark = it.mark,
+                        spannableStringBuilder = it.spannable
+                    )
+                    dialog?.show(parentFragmentManager, "show")
+                } else {
+                    Toast.makeText(activity, "Error occurred while evaluating your mark", Toast.LENGTH_SHORT).show()
+                    dialog = null
+                }
+            }
         })
 
         val animation = AnimationUtils.loadAnimation(activity, R.anim.rotation);
@@ -68,6 +95,18 @@ class PatterFragment : Fragment() {
 
         val fileName = "${requireActivity().externalCacheDir!!.absolutePath}${File.separator}$FILE_NAME"
 
+        // Determine what happens what happens when users lifts his finger from the playButton
+        val onStopRecording = { view : View ->
+            mediaPlayerViewModel.stopRecording()
+            v.spinningLogo.clearAnimation()
+            animation.cancel()
+            animation.reset()
+
+            view.isPressed = false
+            isMarkReceived = true
+            isCached = false
+            true
+        }
         // Start recording voice for future analysis
         v.recordButton.setOnTouchListener { view, motionEvent ->
             when (motionEvent.action) {
@@ -81,20 +120,10 @@ class PatterFragment : Fragment() {
                     true
                 }
                 MotionEvent.ACTION_UP -> {
-                    mediaPlayerViewModel.stopRecording()
-                    v.spinningLogo.clearAnimation()
-                    animation.cancel()
-                    animation.reset()
-                    view.isPressed = false
-                    true
+                    onStopRecording(view)
                 }
                 MotionEvent.ACTION_CANCEL -> {
-                    mediaPlayerViewModel.stopRecording()
-                    v.spinningLogo.clearAnimation()
-                    animation.cancel()
-                    animation.reset()
-                    view.isPressed = false
-                    true
+                    onStopRecording(view)
                 }
                 else -> {
                     Log.d(LOG_TAG, "Action - ${motionEvent.action}")
@@ -136,21 +165,34 @@ class PatterFragment : Fragment() {
                 patterListViewModel.update(patter)
         }
 
+        v.sendSpeechToRecognitionButton.setOnClickListener {
+            if(isMarkReceived && !isCached)
+                markEvaluator.recognize(byteArrayOf(0), patter.text)
+            else {
+                dialog?.show(parentFragmentManager, "show")
+            }
+        }
+
         return v
     }
 
     override fun onStop() {
+        markEvaluator.cancelRequest()
         mediaPlayerViewModel.stopPlaying()
         mediaPlayerViewModel.stopRecording()
         super.onStop()
     }
 
     override fun onDestroy() {
+        markEvaluator.cancelRequest()
         mediaPlayerViewModel.stopPlaying()
         mediaPlayerViewModel.stopRecording()
         super.onDestroy()
     }
 
+    /**
+     * Util functions for accessing permissions
+     */
     private fun checkRecordPermission() : Boolean =
         if (ContextCompat.checkSelfPermission(requireActivity(),
                 android.Manifest.permission.RECORD_AUDIO)

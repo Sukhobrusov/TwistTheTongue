@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="64dp"
+    android:elevation="12dp"
+    android:orientation="horizontal">
+
+    <TextView
+        android:text="Sample text"
+        android:layout_centerVertical="true"
+        android:layout_marginStart="16dp"
+        android:textSize="18sp"
+        android:textColor="@color/black"
+        android:layout_alignParentStart="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/titleTextView"/>
+
+    <androidx.appcompat.widget.AppCompatCheckBox
+        android:id="@+id/favoriteCheck"
+        android:layout_centerVertical="true"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_marginEnd="16dp"
+        android:layout_alignParentEnd="true"
+        android:button="@drawable/star_btn_states"/>
+
+    <LinearLayout
+        android:id="@+id/visitCounterLayout"
+        android:visibility="invisible"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_toStartOf="@id/favoriteCheck">
+        <TextView
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:text="0"
+            android:textSize="18sp"
+            android:textColor="@color/black"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/visitCounterTextView"/>
+
+        <ImageView
+            android:id="@+id/watchIconImageView"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_marginEnd="16dp"
+            android:src="@drawable/ic_eye_black"
+            />
+    </LinearLayout>
+
+
+
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_alignParentBottom="true"
+        android:background="#dedede"/>
+
+</RelativeLayout>

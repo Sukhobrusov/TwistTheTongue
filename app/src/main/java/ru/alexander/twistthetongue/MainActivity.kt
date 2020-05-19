@@ -22,9 +22,6 @@ class MainActivity : AppCompatActivity() {
 
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
-        val viewModel : MainViewModel by viewModels()
-        viewModel.setName("Alexander")
         val navController = findNavController(R.id.nav_host_fragment)
         val appBarConfiguration = AppBarConfiguration((navController.graph))
         toolbar.setupWithNavController(navController, appBarConfiguration)

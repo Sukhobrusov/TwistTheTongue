@@ -1,23 +1,36 @@
 package ru.alexander.twistthetongue
 
 import org.junit.Test
+import java.util.*
 
 
 class MarkTest {
     @Test
     fun testMark() {
+
+        val sourceWords =
+            "Peter Piper picked a peck of pickled peppers\nA peck of pickled peppers Peter Piper picked\nIf Peter Piper picked a peck of pickled peppers\nWhere’s the peck of pickled peppers Peter Piper picked?"
+                .replace("\n", " & ")
+                .replace(Regex("[.|!|?]"), "")
+                .split(" ")
+        val recognizedSpeechWords =
+            "Peter piper picked peck pickled peppers a peck of pickled peppers peter piper picked if peter"
+                .split(" ")
+
+        //comparing both sets
+        val difSet = compareStrings(
+            sourceWords.toLowerCase(),
+            recognizedSpeechWords.toLowerCase()
+        )
         println(
-            compareStrings(
-                "Peter Piper picked a peck of pickled peppers",
-                "Peter picked a peck of pickled peppers"
-            ).displayArray()
+            difSet.displayArray()
         )
     }
 
-    private fun compareStrings(source: String, recognizedSpeech: String): IntArray {
-        val sourceWords = source.toLowerCase().replace('\n', ' ').split(" ")
-        val recognizedSpeechWords = recognizedSpeech.toLowerCase().split(" ")
-
+    private fun compareStrings(
+        sourceWords: List<String>,
+        recognizedSpeechWords: List<String>
+    ): IntArray {
         return if (sourceWords.size > recognizedSpeechWords.size) {
             compareArraysPartially(sourceWords, recognizedSpeechWords)
         } else {
@@ -25,7 +38,6 @@ class MarkTest {
         }
 
     }
-
 
     private fun compareArrays(
         sourceWords: List<String>,
@@ -64,7 +76,7 @@ class MarkTest {
         }**/
 
         val difSourceArray = IntArray(sourceWords.size) { -1 }
-        val difArray = IntArray(recognizedSpeechWords.size) { -1 }
+        //val difArray = IntArray(recognizedSpeechWords.size) { -1 }
         val tolerance = 3
 
         var i = 0
@@ -73,15 +85,16 @@ class MarkTest {
 
         while (i < sourceWords.size) {
             j = lastSetIndex + 1
-            while (j < lastSetIndex + tolerance + 1 && j < recognizedSpeechWords.size) {
-                if (sourceWords[i] == recognizedSpeechWords[j]) {
-                    lastSetIndex = j
-                    difArray[lastSetIndex] = 1
-                    difSourceArray[i] = 1
-                    break
+            if (sourceWords[i] != "&")
+                while (j < lastSetIndex + tolerance + 1 && j < recognizedSpeechWords.size) {
+                    if (sourceWords[i] == recognizedSpeechWords[j]) {
+                        lastSetIndex = j
+                        //difArray[lastSetIndex] = 1
+                        difSourceArray[i] = 1
+                        break
+                    }
+                    j++
                 }
-                j++
-            }
             i++
         }
         return difSourceArray
@@ -101,6 +114,8 @@ class MarkTest {
 
         while (i < recognizedSpeechWords.size) {
             j = lastSetIndex + 1
+            if (sourceWords[j] == "&")
+                lastSetIndex++
             while (j < lastSetIndex + tolerance + 1 && j < sourceWords.size) {
                 if (sourceWords[j] == recognizedSpeechWords[i]) {
                     lastSetIndex = j
@@ -114,9 +129,14 @@ class MarkTest {
         return difArray
     }
 
-    fun IntArray.displayArray() : String {
+
+    // function that turns each element of string list into lowercase version
+    private fun List<String>.toLowerCase(): List<String> =
+        this.map { it.toLowerCase(Locale.ENGLISH) }
+
+    fun IntArray.displayArray(): String {
         var string = ""
-        this.forEach { string +=  "$it " }
+        this.forEach { string += "$it " }
         return string
     }
 }

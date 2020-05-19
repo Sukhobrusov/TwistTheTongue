@@ -10,42 +10,54 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import kotlinx.android.synthetic.main.fragment_patter_list.view.*
+import kotlinx.android.synthetic.main.fragment_favorites.view.*
 import ru.alexander.twistthetongue.R
+import ru.alexander.twistthetongue.adapters.FavoritePattersAdapter
 import ru.alexander.twistthetongue.adapters.PatterAdapter
 import ru.alexander.twistthetongue.listeners.OnPatterClickListener
 import ru.alexander.twistthetongue.model.Patter
-import ru.alexander.twistthetongue.viewmodels.PatterListViewModel
+import ru.alexander.twistthetongue.viewmodels.FavouritesViewModel
 
-class PatterListFragment : Fragment() {
+class FavoriteListFragment : Fragment() {
 
-    val listViewModel : PatterListViewModel by activityViewModels()
+    private val favoritesViewModel : FavouritesViewModel by activityViewModels()
+
+    companion object {
+        fun newInstance() : FavoriteListFragment {
+            return FavoriteListFragment()
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val v = inflater.inflate(R.layout.fragment_patter_list, container, false)
 
+        val v = inflater.inflate(R.layout.fragment_favorites, container, false)
+        // setting up the list
+        // finding RecyclerView and setting adapters and managers to it
         val recyclerView = v.recyclerView
         recyclerView.layoutManager = LinearLayoutManager(requireActivity())
-        val adapter = PatterAdapter(object: OnPatterClickListener {
+        val adapter = FavoritePattersAdapter(object: OnPatterClickListener {
             override fun onClick(patter: Patter) {
                 patter.visits++
-                listViewModel.update(patter)
-                v.findNavController().navigate(R.id.action_patterListFragment_to_patterFragment, bundleOf("patter" to patter))
+                favoritesViewModel.update(patter)
+                v.findNavController().navigate(R.id.action_favoriteListFragment_to_patterFragment, bundleOf("patter" to patter))
             }
 
             override fun onFavorite(patter: Patter) {
-                listViewModel.update(patter)
+                favoritesViewModel.update(patter)
             }
         })
         recyclerView.adapter = adapter
-        listViewModel.allPatters.observe(viewLifecycleOwner, Observer {
+
+        // setting up observers for list of favorite patters
+        favoritesViewModel.favorites.observe(viewLifecycleOwner, Observer {
             adapter.patters = it
         })
-
         return v
     }
+
+
 }

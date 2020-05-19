@@ -36,63 +36,55 @@ abstract class PatterDatabase : RoomDatabase() {
 
             // Add sample words.
             val jsonArray = JSONArray(
-                "[\n" +
-                        "  {\n" +
-                        "    \"id\": 0,\n" +
-                        "    \"text\": \"Peter Piper picked a peck of pickled peppers\\nA peck of pickled peppers Peter Piper picked\\nIf Peter Piper picked a peck of pickled peppers\\nWhere’s the peck of pickled peppers Peter Piper picked?\",\n" +
-                        "    \"title\": \"Peter Piper\",\n" +
-                        "    \"mark\": 0,\n" +
-                        "    \"visits\": 0,\n" +
-                        "    \"favorite\": false\n" +
-                        "  },\n" +
-                        "  {\n" +
-                        "    \"id\": 1,\n" +
-                        "    \"text\": \"How much wood would a woodchuck chuck if a woodchuck could chuck wood?\\nHe would chuck, he would, as much as he could, and chuck as much wood\\nAs a woodchuck would if a woodchuck could chuck wood\",\n" +
-                        "    \"title\": \"Woodchunk chunk\",\n" +
-                        "    \"mark\": 0,\n" +
-                        "    \"visits\": 0,\n" +
-                        "    \"favorite\": false\n" +
-                        "  },\n" +
-                        "  {\n" +
-                        "    \"id\": 2,\n" +
-                        "    \"text\": \"Betty Botter bought some butter\\nBut she said the butter’s bitter\\nIf I put it in my batter, it will make my batter bitter\\nBut a bit of better butter will make my batter better\\nSo ‘twas better Betty Botter bought a bit of better butter\",\n" +
-                        "    \"title\": \"Betty Botter\",\n" +
-                        "    \"mark\": 0,\n" +
-                        "    \"visits\": 0,\n" +
-                        "    \"favorite\": false\n" +
-                        "  }\n" +
-                        "]\n"
+                """[
+  { 
+      "id": 0, 
+      "text": "Peter Piper picked a peck of pickled peppers\nA peck of pickled peppers Peter Piper picked\nIf Peter Piper picked a peck of pickled peppers\nWhere’s the peck of pickled peppers Peter Piper picked?", 
+      "title": "Peter Piper",
+      "mark": 0, 
+      "visits": 0, 
+      "favorite": false 
+    }, 
+    { 
+      "id": 1, 
+      "text": "How much wood would a woodchuck chuck if a woodchuck could chuck wood?\nHe would chuck, he would, as much as he could, and chuck as much wood\nAs a woodchuck would if a woodchuck could chuck wood" ,
+      "title": "Woodchunk chunk",
+      "mark": 0, 
+      "visits": 0, 
+      "favorite": false 
+    }, 
+    { 
+      "id": 2, 
+      "text": "Betty Botter bought some butter\nBut she said the butter’s bitter\nIf I put it in my batter, it will make my batter bitter\nBut a bit of better butter will make my batter better\nSo ‘twas better Betty Botter bought a bit of better butter",
+      "title": "Betty Botter",
+      "mark": 0, 
+      "visits": 0, 
+      "favorite": false 
+    }
+    , 
+    { 
+      "id": 3, 
+      "text": "Betty Botter bought some butter\nBut she said the butter’s bitter\nIf I put it in my batter, it will make my batter bitter\nBut a bit of better butter will make my batter better\nSo ‘twas better Betty Botter bought a bit of better butter",
+      "title": "Betty Botter",
+      "mark": 0, 
+      "visits": 0, 
+      "favorite": false 
+    }
+]
+"""
             )
-            var patter = Patter(
-                jsonArray.getJSONObject(0)["id"] as Int,
-                jsonArray.getJSONObject(0)["text"] as String,
-                jsonArray.getJSONObject(0)["title"] as String,
-                jsonArray.getJSONObject(0)["mark"] as Int,
-                jsonArray.getJSONObject(0)["visits"] as Int,
-                jsonArray.getJSONObject(0)["favorite"] as Boolean
-            )
-            patterDao.insert(patter)
 
-            patter = Patter(
-                jsonArray.getJSONObject(1)["id"] as Int,
-                jsonArray.getJSONObject(1)["text"] as String,
-                jsonArray.getJSONObject(1)["title"] as String,
-                jsonArray.getJSONObject(1)["mark"] as Int,
-                jsonArray.getJSONObject(1)["visits"] as Int,
-                jsonArray.getJSONObject(1)["favorite"] as Boolean
-            )
-            patterDao.insert(patter)
-
-            patter = Patter(
-                jsonArray.getJSONObject(2)["id"] as Int,
-                jsonArray.getJSONObject(2)["text"] as String,
-                jsonArray.getJSONObject(2)["title"] as String,
-                jsonArray.getJSONObject(2)["mark"] as Int,
-                jsonArray.getJSONObject(2)["visits"] as Int,
-                jsonArray.getJSONObject(2)["favorite"] as Boolean
-            )
-            patterDao.insert(patter)
-
+            for (i in 0..3) {
+                val patter = Patter(
+                    jsonArray.getJSONObject(i)["id"] as Int,
+                    jsonArray.getJSONObject(i)["text"] as String,
+                    jsonArray.getJSONObject(i)["title"] as String,
+                    jsonArray.getJSONObject(i)["mark"] as Int,
+                    jsonArray.getJSONObject(i)["visits"] as Int,
+                    jsonArray.getJSONObject(i)["favorite"] as Boolean
+                )
+                patterDao.insert(patter)
+            }
         }
     }
 

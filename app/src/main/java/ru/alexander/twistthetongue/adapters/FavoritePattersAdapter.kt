@@ -4,13 +4,17 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import kotlinx.android.synthetic.main.favorite_patter_item.view.*
 import kotlinx.android.synthetic.main.patter_item.view.*
+import kotlinx.android.synthetic.main.patter_item.view.favoriteCheck
+import kotlinx.android.synthetic.main.patter_item.view.titleTextView
 import ru.alexander.twistthetongue.R
 import ru.alexander.twistthetongue.listeners.OnPatterClickListener
 import ru.alexander.twistthetongue.model.Patter
 
-class PatterAdapter(val onClickListener: OnPatterClickListener ) :
-    RecyclerView.Adapter<PatterAdapter.PatterHolder>() {
+class FavoritePattersAdapter(val onClickListener: OnPatterClickListener) :
+    RecyclerView.Adapter<FavoritePattersAdapter.FavoritePatterHolder>() {
+
 
     var patters: List<Patter> = emptyList()
         set(value) {
@@ -18,35 +22,34 @@ class PatterAdapter(val onClickListener: OnPatterClickListener ) :
             notifyDataSetChanged()
         }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PatterHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FavoritePatterHolder {
         val v = LayoutInflater.from(parent.context)
-            .inflate(R.layout.patter_item, parent, false)
+            .inflate(R.layout.favorite_patter_item, parent, false)
 
-        return PatterHolder(v, onClickListener)
+        return FavoritePatterHolder(v, onClickListener)
     }
 
     override fun getItemCount(): Int = patters.size
 
-    override fun onBindViewHolder(holder: PatterHolder, position: Int) {
+    override fun onBindViewHolder(holder: FavoritePatterHolder, position: Int) {
         val patter = patters[position]
         holder.setPatter(patter)
-
     }
 
-    class PatterHolder(itemView: View, val lisetner: OnPatterClickListener) :
+    class FavoritePatterHolder(itemView: View, val lisetner: OnPatterClickListener) :
         RecyclerView.ViewHolder(itemView) {
 
 
         fun setPatter(patter: Patter) {
             itemView.titleTextView.text = patter.title
             itemView.favoriteCheck.isChecked = patter.favorite
-            itemView.markTextView.text = patter.mark.toString()
-            itemView.markTextView.visibility = if (patter.mark != 0) View.VISIBLE else View.INVISIBLE
+            itemView.visitCounterTextView.text = patter.visits.toString()
+            itemView.visitCounterLayout.visibility = if (patter.visits != 0) View.VISIBLE else View.INVISIBLE
             itemView.setOnClickListener {
                 lisetner.onClick(patter)
             }
             itemView.favoriteCheck.setOnCheckedChangeListener { compoundButton, b ->
-                patter.favorite = b
+                patter.favorite = false
                 lisetner.onFavorite(patter)
             }
         }
