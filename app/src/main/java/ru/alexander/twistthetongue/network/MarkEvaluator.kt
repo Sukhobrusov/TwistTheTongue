@@ -38,7 +38,7 @@ class MarkEvaluator {
 
                         val sourceWords = sourcePatter
                             .replace("\n", " & ")
-                            .replace(Regex("[.|!|?]"), "")
+                            .replace(Regex("[.|,|!|?|—|\-]"), "")
                             .split(" ")
                         val recognizedSpeechWords = it.result
                             .split(" ")
