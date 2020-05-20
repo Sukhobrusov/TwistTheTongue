@@ -29,12 +29,7 @@ class MarkEvaluator {
     fun recognize(content: ByteArray, sourcePatter: String) {
         Log.d(TAG, "Observing patter - $sourcePatter")
         disposable =
-                //api.recognize("",content)
-            Observable.fromCallable {
-                // imitating hard work
-                Thread.sleep(400)
-                Response("Peter piper picked peck pickled peppers a peck of pickled peppers peter piper picked if peter")
-            }
+                api.recognize(AUTH_TOKEN,content)
                 .subscribeOn(Schedulers.io())
                 //.observeOn(AndroidSchedulers.mainThread())
                 .observeOn(Schedulers.io())
