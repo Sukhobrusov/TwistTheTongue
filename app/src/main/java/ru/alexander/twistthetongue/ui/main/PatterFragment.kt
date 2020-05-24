@@ -58,6 +58,9 @@ class PatterFragment : Fragment() {
         private const val PATTER_KEY = "patter"
         private const val FILE_NAME = "patter.flac"
         private const val LOG_TAG = "PatterFragment"
+        private const val SPEECH_TO_TEXT_CODE = 528
+
+
         fun newInstance(patter: Patter): PatterFragment {
             val fragmnet = PatterFragment()
             val args = Bundle()
@@ -148,7 +151,7 @@ class PatterFragment : Fragment() {
                         //mediaPlayerViewModel.startRecording(fileName)
 
                         v.spinningLogo.startAnimation(animation)
-                        startActivityForResult(intent, 528)
+                        startActivityForResult(intent, SPEECH_TO_TEXT_CODE)
                         Log.d(LOG_TAG, "Start listening")
 
 
@@ -382,7 +385,7 @@ class PatterFragment : Fragment() {
         super.onActivityResult(requestCode, resultCode, data)
         Log.d(LOG_TAG, "OnActivityResult $requestCode")
         when(requestCode) {
-            528 -> {
+            SPEECH_TO_TEXT_CODE -> {
                 Log.d(LOG_TAG, "Writing to file")
                 lifecycleScope.launch(Dispatchers.IO) {
                     val audioUri = data!!.data
