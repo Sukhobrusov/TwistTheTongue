@@ -16,6 +16,32 @@ import ru.alexander.twistthetongue.model.Patter
 abstract class PatterDatabase : RoomDatabase() {
     abstract fun patterDao(): PatterDao
 
+    companion object {
+        @Volatile
+        private var INSTANCE: PatterDatabase? = null
+
+        fun getDatabase(
+            context: Context,
+            scope: CoroutineScope
+        ): PatterDatabase {
+            val tempInstance = INSTANCE
+            if (tempInstance != null)
+                return tempInstance
+
+            synchronized(this) {
+                val instance = Room.databaseBuilder(
+                    context.applicationContext,
+                    PatterDatabase::class.java,
+                    "patter_database"
+                )
+                    .addCallback(PatterDatabaseCallback(scope))
+                    .build()
+                INSTANCE = instance
+                return instance
+            }
+        }
+    }
+    
     private class PatterDatabaseCallback(
         private val scope: CoroutineScope
     ) : RoomDatabase.Callback() {
@@ -75,32 +101,6 @@ abstract class PatterDatabase : RoomDatabase() {
                     jsonArray.getJSONObject(i)["favorite"] as Boolean
                 )
                 patterDao.insert(patter)
-            }
-        }
-    }
-
-    companion object {
-        @Volatile
-        private var INSTANCE: PatterDatabase? = null
-
-        fun getDatabase(
-            context: Context,
-            scope: CoroutineScope
-        ): PatterDatabase {
-            val tempInstance = INSTANCE
-            if (tempInstance != null)
-                return tempInstance
-
-            synchronized(this) {
-                val instance = Room.databaseBuilder(
-                    context.applicationContext,
-                    PatterDatabase::class.java,
-                    "patter_database"
-                )
-                    .addCallback(PatterDatabaseCallback(scope))
-                    .build()
-                INSTANCE = instance
-                return instance
             }
         }
     }
