@@ -8,23 +8,25 @@ import retrofit2.create
 import retrofit2.http.Body
 import retrofit2.http.Header
 import retrofit2.http.POST
-import retrofit2.http.Query
+import ru.alexander.twistthetongue.model.LocalInfo
 
 
-data class Response(val result: String)
+data class GoogleResponse(val results: ArrayList<Alternatives>)
+data class Alternatives(val transcript : String, val confidence : Double)
 
-interface YandexApi {
-    @POST("/speech/v1/stt:recognize")
+interface GoogleApi {
+
+    @POST("/v1/speech:recognize")
     fun recognize(
-        @Header("Authorization") authToken: String,
-        @Body content: String,
-        @Query("lang") language: String = "ru-RU"
-    ): Observable<Response>
+        @Header("Authorization") authToken: String = "Bearer ${LocalInfo.AUTH_KEY_GOOGLE}}",
+        @Header("Content-Type") type : String = "application/json; charset=utf-8",
+        @Body data: String
+    ): Observable<GoogleResponse>
 
     companion object {
-        fun create() : YandexApi{
+        fun create() : GoogleApi{
             val retrofit = Retrofit.Builder()
-                .baseUrl("https://stt.api.cloud.yandex.net")
+                .baseUrl("https://speech.googleapis.com")
                 .addConverterFactory(GsonConverterFactory.create())
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .build()

@@ -36,7 +36,7 @@ class StatisticsFragment : Fragment() {
             }
 
             v.totalVisitsTextView.text = totalVisits.toString()
-            v.averageMarkTextView.text = averageMark.toString()
+            v.averageMarkTextView.text = (averageMark / visitedPatters).toString()
             v.favoritePatterTextView.text = favoritePatter
             v.visitedPattersTextView.text = visitedPatters.toString()
         })

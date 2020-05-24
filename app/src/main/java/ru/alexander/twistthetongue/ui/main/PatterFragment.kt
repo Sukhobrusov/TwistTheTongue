@@ -1,7 +1,13 @@
 package ru.alexander.twistthetongue.ui.main
 
+import android.content.ContentResolver
+import android.content.Intent
 import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Bundle
+import android.speech.RecognitionListener
+import android.speech.RecognizerIntent
+import android.speech.SpeechRecognizer
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.MotionEvent
@@ -10,37 +16,47 @@ import android.view.ViewGroup
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
+import androidx.lifecycle.lifecycleScope
 import kotlinx.android.synthetic.main.twister_view.view.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import ru.alexander.twistthetongue.R
 import ru.alexander.twistthetongue.model.Patter
 import ru.alexander.twistthetongue.network.MarkEvaluator
 import ru.alexander.twistthetongue.viewmodels.MediaPlayerViewModel
 import ru.alexander.twistthetongue.viewmodels.PatterListViewModel
 import java.io.File
+import java.io.InputStream
 
 
 class PatterFragment : Fragment() {
 
     private lateinit var patter: Patter
 
-    private var dialog : DialogFragment? = null
+    private var dialog: DialogFragment? = null
 
     private lateinit var markEvaluator: MarkEvaluator
     private val mediaPlayerViewModel: MediaPlayerViewModel by activityViewModels()
-    private val patterListViewModel : PatterListViewModel by activityViewModels()
+    private val patterListViewModel: PatterListViewModel by activityViewModels()
+
+    private var speechRecognizer: SpeechRecognizer? = null
 
     private var isCached = false
     private var isMarkReceived = false
 
+    private var cachedString = ""
+
     companion object {
         private const val PATTER_KEY = "patter"
-        private const val FILE_NAME = "patter.3gp"
+        private const val FILE_NAME = "patter.flac"
         private const val LOG_TAG = "PatterFragment"
         fun newInstance(patter: Patter): PatterFragment {
             val fragmnet = PatterFragment()
@@ -72,7 +88,6 @@ class PatterFragment : Fragment() {
 
                 if (it.mark != -1) {
                     isCached = true
-
                     patter.mark = it.mark
                     patterListViewModel.update(patter)
                     v.currentMarkTextView.text = "${it.mark}"
@@ -83,7 +98,11 @@ class PatterFragment : Fragment() {
                     )
                     dialog?.show(parentFragmentManager, "show")
                 } else {
-                    Toast.makeText(activity, "Error occurred while evaluating your mark", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        activity,
+                        "Error occurred while evaluating your mark",
+                        Toast.LENGTH_SHORT
+                    ).show()
                     dialog = null
                 }
             }
@@ -93,31 +112,53 @@ class PatterFragment : Fragment() {
         animation.repeatCount = Animation.INFINITE
         animation.repeatMode = Animation.RESTART
 
-        val fileName = "${requireActivity().externalCacheDir!!.absolutePath}${File.separator}$FILE_NAME"
+        val fileName =
+            "${requireActivity().externalCacheDir!!.absolutePath}${File.separator}$FILE_NAME"
 
+
+
+        initRecorder()
         // Determine what happens what happens when users lifts his finger from the playButton
-        val onStopRecording = { view : View ->
-            mediaPlayerViewModel.stopRecording()
+        val onStopRecording = { view: View ->
+            speechRecognizer!!.stopListening()
+            Log.d(LOG_TAG, "Stop listening ${speechRecognizer}")
+            //mediaPlayerViewModel.stopRecording()
             v.spinningLogo.clearAnimation()
             animation.cancel()
             animation.reset()
 
             view.isPressed = false
-            isMarkReceived = true
             isCached = false
-            true
+            false
         }
         // Start recording voice for future analysis
+
         v.recordButton.setOnTouchListener { view, motionEvent ->
             when (motionEvent.action) {
                 MotionEvent.ACTION_DOWN -> {
                     Log.d(LOG_TAG, "Holding Record Button")
                     if (checkRecordPermission()) {
-                        mediaPlayerViewModel.startRecording(fileName)
+                        val intent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH)
+                        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, "ru-RU")
+                        intent.putExtra("android.speech.extra.GET_AUDIO_FORMAT", "audio/AMR")
+                        intent.putExtra("android.speech.extra.GET_AUDIO", true)
+
+                        //speechRecognizer?.startListening(intent)
+
+                        //mediaPlayerViewModel.startRecording(fileName)
+
                         v.spinningLogo.startAnimation(animation)
+                        startActivityForResult(intent, 528)
+                        Log.d(LOG_TAG, "Start listening")
+
+
                         view.isPressed = true
+                        isMarkReceived = false
+                        isCached = false
+                        true
+                    } else {
+                        false
                     }
-                    true
                 }
                 MotionEvent.ACTION_UP -> {
                     onStopRecording(view)
@@ -161,14 +202,40 @@ class PatterFragment : Fragment() {
         }
 
         v.favoriteButton.setOnCheckedChangeListener { _, b ->
-                patter.favorite = b
-                patterListViewModel.update(patter)
+            patter.favorite = b
+            patterListViewModel.update(patter)
         }
 
         v.sendSpeechToRecognitionButton.setOnClickListener {
-            if(isMarkReceived && !isCached)
-                markEvaluator.recognize(byteArrayOf(0), patter.text)
-            else {
+            if (isMarkReceived && !isCached) {
+                val recordData = MutableLiveData<MediaPlayerViewModel.Record>()
+                recordData.observe(viewLifecycleOwner, Observer {
+                    when (it.state) {
+                        MediaPlayerViewModel.State.DONE -> {
+                            markEvaluator.recognize(it.encodedString, patter.text)
+                        }
+                        MediaPlayerViewModel.State.ERROR_READING_FILE -> {
+                            Toast.makeText(activity, "Error reading file", Toast.LENGTH_SHORT)
+                                .show()
+                            Log.d(LOG_TAG, "Error while reading file")
+                            isMarkReceived = true
+                        }
+                        MediaPlayerViewModel.State.FILE_NOT_FOUND -> {
+                            Toast.makeText(activity, "File not found", Toast.LENGTH_SHORT).show()
+                            Log.d(LOG_TAG, "file not found")
+                            isMarkReceived = true
+                        }
+                        MediaPlayerViewModel.State.CALCULATING -> {
+                            Log.d(LOG_TAG, "calculating...")
+                        }
+                    }
+
+                })
+                mediaPlayerViewModel.getFileInfo(fileName, recordData)
+                isMarkReceived = false
+            } else if (isCached && !isMarkReceived) {
+                markEvaluator.recognizePatter(cachedString, patter.text)
+            }else {
                 dialog?.show(parentFragmentManager, "show")
             }
         }
@@ -180,6 +247,7 @@ class PatterFragment : Fragment() {
         markEvaluator.cancelRequest()
         mediaPlayerViewModel.stopPlaying()
         mediaPlayerViewModel.stopRecording()
+        speechRecognizer?.destroy()
         super.onStop()
     }
 
@@ -187,56 +255,62 @@ class PatterFragment : Fragment() {
         markEvaluator.cancelRequest()
         mediaPlayerViewModel.stopPlaying()
         mediaPlayerViewModel.stopRecording()
+        speechRecognizer?.destroy()
+        speechRecognizer = null
         super.onDestroy()
     }
 
     /**
      * Util functions for accessing permissions
      */
-    private fun checkRecordPermission() : Boolean =
-        if (ContextCompat.checkSelfPermission(requireActivity(),
-                android.Manifest.permission.RECORD_AUDIO)
-            != PackageManager.PERMISSION_GRANTED) {
-
-            // Permission is not granted
-            // Should we show an explanation?
-            if (ActivityCompat.shouldShowRequestPermissionRationale(requireActivity(),
-                    android.Manifest.permission.RECORD_AUDIO)) {
-                // Show an explanation to the user *asynchronously* -- don't block
-                // this thread waiting for the user's response! After the user
-                // sees the explanation, try again to request the permission.
+    private fun checkRecordPermission(): Boolean =
+        if (ContextCompat.checkSelfPermission(
+                requireActivity(),
+                android.Manifest.permission.RECORD_AUDIO
+            )
+            != PackageManager.PERMISSION_GRANTED
+        ) {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(
+                    requireActivity(),
+                    android.Manifest.permission.RECORD_AUDIO
+                )
+            ) {
             } else {
-                // No explanation needed, we can request the permission.
-                ActivityCompat.requestPermissions(requireActivity(),
-                    arrayOf(android.Manifest.permission.RECORD_AUDIO),5)
-
-                // MY_PERMISSIONS_REQUEST_READ_CONTACTS is an
-                // app-defined int constant. The callback method gets the
-                // result of the request.
+                ActivityCompat.requestPermissions(
+                    requireActivity(),
+                    arrayOf(android.Manifest.permission.RECORD_AUDIO), 5
+                )
             }
-
             false
         } else {
-            // Permission has already been granted
             true
         }
-    private fun checkWritePermission() : Boolean =
+
+    private fun checkWritePermission(): Boolean =
         // Here, thisActivity is the current activity
-        if (ContextCompat.checkSelfPermission(requireActivity(),
-                android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
-            != PackageManager.PERMISSION_GRANTED) {
+        if (ContextCompat.checkSelfPermission(
+                requireActivity(),
+                android.Manifest.permission.WRITE_EXTERNAL_STORAGE
+            )
+            != PackageManager.PERMISSION_GRANTED
+        ) {
 
             // Permission is not granted
             // Should we show an explanation?
-            if (ActivityCompat.shouldShowRequestPermissionRationale(requireActivity(),
-                    android.Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(
+                    requireActivity(),
+                    android.Manifest.permission.WRITE_EXTERNAL_STORAGE
+                )
+            ) {
                 // Show an explanation to the user *asynchronously* -- don't block
                 // this thread waiting for the user's response! After the user
                 // sees the explanation, try again to request the permission.
             } else {
                 // No explanation needed, we can request the permission.
-                ActivityCompat.requestPermissions(requireActivity(),
-                    arrayOf(android.Manifest.permission.WRITE_EXTERNAL_STORAGE),2)
+                ActivityCompat.requestPermissions(
+                    requireActivity(),
+                    arrayOf(android.Manifest.permission.WRITE_EXTERNAL_STORAGE), 2
+                )
 
                 // MY_PERMISSIONS_REQUEST_READ_CONTACTS is an
                 // app-defined int constant. The callback method gets the
@@ -248,4 +322,85 @@ class PatterFragment : Fragment() {
             // Permission has already been granted
             true
         }
+
+
+    private fun initRecorder() {
+        if (checkRecordPermission()) {
+            speechRecognizer =
+                SpeechRecognizer.createSpeechRecognizer(requireContext())
+            val recognitionListener = object : RecognitionListener {
+                override fun onReadyForSpeech(params: Bundle?) {
+                    Log.d(LOG_TAG, "onReadyForSpeech")
+
+                }
+
+                override fun onRmsChanged(rmsdB: Float) {
+                    Log.d(LOG_TAG, "onRmsChanged $rmsdB")
+
+                }
+
+                override fun onBufferReceived(buffer: ByteArray?) {
+                    Log.d(LOG_TAG, "onBufferedReceived")
+                }
+
+                override fun onPartialResults(partialResults: Bundle?) {
+                    Log.d(LOG_TAG, "onPartialResults")
+                }
+
+                override fun onEvent(eventType: Int, params: Bundle?) {
+                    Log.d(LOG_TAG, "onEvent")
+
+                }
+
+                override fun onBeginningOfSpeech() {
+                    Log.d(LOG_TAG, "beginning of the speech")
+
+                }
+
+                override fun onEndOfSpeech() {
+                    Log.d(LOG_TAG, "onEndOfSpeech")
+
+                }
+
+                override fun onError(error: Int) {
+                    Log.d(LOG_TAG, "onError $error")
+                }
+
+                override fun onResults(results: Bundle?) {
+                    val res = results?.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION) ?: return
+                    val str = res.first()
+                    markEvaluator.recognizePatter(resolved = str, sourcePatter = patter.text)
+                    Log.d(LOG_TAG, "Displaying array = $str")
+                }
+
+            }
+            speechRecognizer?.setRecognitionListener(recognitionListener)
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        Log.d(LOG_TAG, "OnActivityResult $requestCode")
+        when(requestCode) {
+            528 -> {
+                Log.d(LOG_TAG, "Writing to file")
+                lifecycleScope.launch(Dispatchers.IO) {
+                    val audioUri = data!!.data
+                    val contentResolver: ContentResolver = requireActivity().contentResolver
+                    val filestream = contentResolver.openInputStream(audioUri!!)
+                    val file =
+                        File("${requireActivity().externalCacheDir!!.absolutePath}${File.separator}$FILE_NAME")
+                    filestream?.copyTo(file.outputStream())
+                    filestream?.close()
+                }
+
+                cachedString = data?.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS)?.first() ?: return
+                Log.d(LOG_TAG, cachedString)
+                isCached = true
+                isMarkReceived = false
+
+
+            }
+        }
+    }
 }

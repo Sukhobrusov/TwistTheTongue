@@ -7,11 +7,11 @@ apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 
 android {
-    compileSdkVersion 28
+    compileSdkVersion 29
     defaultConfig {
         applicationId "ru.alexander.twistthetongue"
-        minSdkVersion 21
-        targetSdkVersion 28
+        minSdkVersion 26
+        targetSdkVersion 29
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -28,6 +28,19 @@ android {
     }
     kotlinOptions {
         jvmTarget = "1.8"
+    }
+
+    packagingOptions {
+        exclude 'META-INF/DEPENDENCIES'
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/INDEX.LIST'
+        exclude 'META-INF/LICENSE.txt'
+        exclude 'META-INF/license.txt'
+        exclude 'META-INF/NOTICE'
+        exclude 'META-INF/NOTICE.txt'
+        exclude 'META-INF/notice.txt'
+        exclude 'META-INF/ASL2.0'
+        exclude("META-INF/*.kotlin_module")
     }
 }
 
@@ -78,7 +91,7 @@ dependencies {
 
 
     // https://mvnrepository.com/artifact/com.android.support/design
-    implementation group: 'com.android.support', name: 'design', version: '28.0.0'
+    implementation group: 'com.android.support', name: 'design', version: '29.0.0'
 
     //retrofit
     implementation 'com.squareup.retrofit2:converter-gson:2.5.0'
@@ -104,5 +117,8 @@ dependencies {
 
     // optional - Guava support for Room, including Optional and ListenableFuture
     implementation "androidx.room:room-guava:$room_version"
+
+    implementation 'com.google.cloud:google-cloud-speech:1.23.0'
+
 
 }
