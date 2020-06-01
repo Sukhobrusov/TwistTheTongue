@@ -108,8 +108,6 @@ class MarkEvaluator {
         disposable =
                 //api.recognize(data = obj.toString())
             Observable.fromCallable {
-                // imitating hard work
-                Thread.sleep(200)
                 GoogleResponse(arrayListOf(Alternatives(resolved,1.0)))
             }
                 .subscribeOn(Schedulers.io())
