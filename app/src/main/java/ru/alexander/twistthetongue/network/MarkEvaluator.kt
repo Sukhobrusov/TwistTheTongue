@@ -18,7 +18,7 @@ import java.util.*
 
 class MarkEvaluator {
 
-    val api = GoogleApi.create()
+    //val api = GoogleApi.create()
 
     val markReturn: MutableLiveData<MarkReturn> by lazy {
         MutableLiveData<MarkReturn>()
@@ -28,8 +28,7 @@ class MarkEvaluator {
 
     companion object {
         private const val TAG = "MarkEvaluator"
-        private const val AUTH_TOKEN =
-            "CggVAgAAABoBMxKABMCe5Y8NMfflpsEAgOhpVnQHNo8EdZE8BvKFl6sGTBxZyTjAcGS0o58GRi-9EBOWLGE7LfR22lAHIGoqSAKiearwGiKKvJMWXDyNbXkWO3grHcxf-iuDUjqcvqn0STT1GLDlxNvB_U5SgA8k2FQ2w88ceKSZbyOQ1K9qTYw8IVn7lnwBLhjDOiX5PFJTWDVuHYNpxoHahzz9iPB84txFQRdlOyokZ8tUi9cME7ZbgyzMDsTMI2S07vTnAJpXzNzVDAkbNZC5Z5nTM2JzJJRYIje80FdItgQt5hm8hlp1BxoRSc4Ig0kB59CPHc1MDe3Uz7Wwhp0sfUVEsxgLe9rz7LzzfWRj19_Jc2jtHmoI9O3fBbcB19aRvV5f4UcJhqDMCEBBnuL5kycbBO9Oxmz0kJkcQKMNJaPs0MxHAXMzGCEZlR47Bil5Uw-Vkdyr8R7YtYsGU6U-wngqSodfOalHfDTjd51qKEZUa0yFBNlRHF6HVIRgGNN1exUn0xmoNZHFIMCYFhtPp7oOMvf-ZsRu2ancAmt6lXjsF52NAuhMribfS_Di3FoiPgZg7NUl5-HHxGpuPa-cvo5rLPVsRhDCaIDiCkjGTO5FUy9LtH8_bKD9QWixphBGyAB4H3pA2FlvermHzg0wmrOJZF-zt9DwY0qfn0ObgcqWcEDzLcs_UaCaGiQQutWV9gUY-qaY9gUiFgoUYWplcWg3Zm1yNGk2ZmxndjlzNm4="
+        private const val AUTH_TOKEN =""
     }
 
     fun recognize(content: String, sourcePatter: String) {
@@ -126,6 +125,7 @@ class MarkEvaluator {
                         val recognizedSpeechWords = it.results.first().transcript
                             .split(" ")
 
+
                         val sourc = sourceWords.joinToString { word -> word}
                         Log.d(TAG, it.results.first().transcript)
                         Log.d(TAG, "Comparing to:\n $sourc")
@@ -164,6 +164,7 @@ class MarkEvaluator {
 
     fun cancelRequest() {
         disposable?.dispose()
+        disposable = null
     }
 
     private fun compareStrings(

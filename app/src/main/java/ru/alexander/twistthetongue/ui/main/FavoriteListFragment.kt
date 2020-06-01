@@ -47,6 +47,7 @@ class FavoriteListFragment : Fragment() {
             }
 
             override fun onFavorite(patter: Patter) {
+                patter.favorite = false
                 favoritesViewModel.update(patter)
             }
         })

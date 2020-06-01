@@ -13,6 +13,9 @@ interface PatterDao {
     @Query("SELECT * FROM patters WHERE favorite = 1")
     fun getFavorites() : LiveData<List<Patter>>
 
+    @Query("SELECT * FROM patters WHERE visits > 0 ORDER BY visits DESC LIMIT 5")
+    fun getSortedByViewCount() : LiveData<List<Patter>>
+
     @Query("SELECT * FROM patters WHERE title LIKE :search LIMIT 1")
     fun findByTitle(search : String) : Maybe<Patter>
 

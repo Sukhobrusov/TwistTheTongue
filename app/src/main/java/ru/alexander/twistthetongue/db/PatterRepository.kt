@@ -10,6 +10,7 @@ class PatterRepository(private val patterDao: PatterDao) {
 
     val favoritePatters: LiveData<List<Patter>> = patterDao.getFavorites()
     val allPatters: LiveData<List<Patter>> = patterDao.getAll()
+    val sortedPatters : LiveData<List<Patter>> = patterDao.getSortedByViewCount()
 
     suspend fun insert(patter: Patter) {
         patterDao.insert(patter)

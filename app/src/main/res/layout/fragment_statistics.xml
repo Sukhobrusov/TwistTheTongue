@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     >
 
@@ -10,9 +11,9 @@
         android:layout_margin="8dp"
         android:elevation="12dp"
         android:paddingBottom="16dp"
-        android:background="@color/white"
+        android:background="?attr/color"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content">
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/guideline50"
             android:layout_width="0dp"
@@ -26,9 +27,9 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
-            android:textColor="@color/black"
             android:textSize="18sp"
-            android:text="Total visits:"
+            android:textStyle="bold"
+            android:text="@string/total_visits"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -38,7 +39,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
-            android:textColor="@color/black"
+            android:textStyle="bold"
             android:textSize="18sp"
             android:text=""
             app:layout_constraintStart_toStartOf="@id/guideline50"
@@ -50,9 +51,9 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
-            android:textColor="@color/black"
+            android:textStyle="bold"
             android:textSize="18sp"
-            android:text="Average mark:"
+            android:text="@string/average_mark"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/textView5" />
 
@@ -62,7 +63,8 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
-            android:textColor="@color/black"
+            android:textStyle="bold"
+
             android:textSize="18sp"
             android:text=""
             app:layout_constraintStart_toStartOf="@id/guideline50"
@@ -74,9 +76,9 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
-            android:textColor="@color/black"
+            android:textStyle="bold"
             android:textSize="18sp"
-            android:text="Favorite patter:"
+            android:text="@string/favorite_patter"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/textView6" />
 
@@ -86,7 +88,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
-            android:textColor="@color/black"
+            android:textStyle="bold"
             android:textSize="18sp"
             android:text=""
             app:layout_constraintStart_toStartOf="@id/guideline50"
@@ -98,9 +100,9 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
-            android:textColor="@color/black"
+            android:textStyle="bold"
             android:textSize="18sp"
-            android:text="Visited patters:"
+            android:text="@string/visited_patters"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/textView7" />
 
@@ -110,11 +112,25 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
-            android:textColor="@color/black"
+            android:textStyle="bold"
             android:textSize="18sp"
             android:text=""
             app:layout_constraintStart_toStartOf="@id/guideline50"
             app:layout_constraintTop_toBottomOf="@id/favoritePatterTextView" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
-</FrameLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView"
+        android:background="?attr/color"
+        android:elevation="12dp"
+        android:layout_margin="8dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        tools:listitem="@layout/favorite_patter_item"/>
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="800dp"/>
+</LinearLayout>

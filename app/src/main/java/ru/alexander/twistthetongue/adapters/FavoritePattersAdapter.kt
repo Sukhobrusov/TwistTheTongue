@@ -1,5 +1,6 @@
 package ru.alexander.twistthetongue.adapters
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -22,6 +23,9 @@ class FavoritePattersAdapter(val onClickListener: OnPatterClickListener) :
             notifyDataSetChanged()
         }
 
+    companion object {
+        const val TAG = "FavoritePattersAdapter"
+    }
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FavoritePatterHolder {
         val v = LayoutInflater.from(parent.context)
             .inflate(R.layout.favorite_patter_item, parent, false)
@@ -49,7 +53,6 @@ class FavoritePattersAdapter(val onClickListener: OnPatterClickListener) :
                 lisetner.onClick(patter)
             }
             itemView.favoriteCheck.setOnCheckedChangeListener { compoundButton, b ->
-                patter.favorite = false
                 lisetner.onFavorite(patter)
             }
         }

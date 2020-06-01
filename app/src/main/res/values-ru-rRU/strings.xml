@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="grade">Оценка:</string>
+    <string name="example_text">Лавировали, лавировали да не вылавировали</string>
+    <string name="patters" translatable="false">Скороговорки</string>
+    <string name="favorites">Избранные</string>
+    <string name="statistics">Статистика</string>
+    <string name="info">Информация</string>
+    <string name="visited_patters">Выполненных:</string>
+    <string name="favorite_patter">Любимая:</string>
+    <string name="average_mark">Средняя оценка:</string>
+    <string name="total_visits">Всего посещений:</string>
+    <string name="label_main_menu">Главное меню</string>
+    <string name="label_patter_list">Скороговорки</string>
+    <string name="label_favorites">Избранные</string>
+    <string name="label_patter">Скороговорка</string>
+    <string name="label_statistics">Статистика</string>
+    <string name="night_mode">Night mode</string>
+    <string name="day_mode">Day mode</string>
+</resources>

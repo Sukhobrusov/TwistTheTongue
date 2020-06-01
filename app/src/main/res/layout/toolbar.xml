@@ -13,6 +13,29 @@
         android:elevation="4dp"
         android:background="@drawable/twister_ab"
         android:theme="@style/ThemeOverlay.MaterialComponents.Dark.ActionBar"
-        app:popupTheme="@style/ThemeOverlay.MaterialComponents.Dark.ActionBar"/>
+        app:popupTheme="@style/ThemeOverlay.MaterialComponents.Dark.ActionBar">
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_gravity="end"
+            android:gravity="center"
+            android:layout_marginEnd="16dp">
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:contentDescription="@string/day_mode"
+                android:src="@drawable/ic_sun"/>
+            <Switch
+                android:id="@+id/nightmodeSwitch"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:contentDescription="@string/night_mode"
+                android:src="@drawable/ic_moon"/>
+        </LinearLayout>
+    </androidx.appcompat.widget.Toolbar>
 
 </com.google.android.material.appbar.AppBarLayout>

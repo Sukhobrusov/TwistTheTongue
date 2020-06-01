@@ -8,70 +8,94 @@
 
     <fragment
         android:id="@+id/mainScreenFragment"
-        android:name="ru.alexander.twistthetongue.MainScreenFragment"
-        android:label="Main Menu"
+        android:name="ru.alexander.twistthetongue.ui.main.MainScreenFragment"
+        android:label="@string/label_main_menu"
         tools:layout="@layout/fragment_main_screen" >
         <action
             android:id="@+id/action_mainScreenFragment_to_patterListFragment"
             app:destination="@id/patterListFragment"
-            app:exitAnim="@anim/fade_out"
-            app:enterAnim="@anim/fade_in"
-            app:popExitAnim="@anim/fade_out"
-            app:popEnterAnim="@anim/fade_in"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"
             app:popUpTo="@+id/patterListFragment" />
 
         <action
             android:id="@+id/action_mainScreenFragment_to_favoriteListFragment"
             app:destination="@id/favoriteFragment"
-            app:exitAnim="@anim/fade_out"
-            app:enterAnim="@anim/fade_in"
-            app:popExitAnim="@anim/fade_out"
-            app:popEnterAnim="@anim/fade_in"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"
             app:popUpTo="@+id/favoriteFragment" />
         <action
             android:id="@+id/action_mainScreenFragment_to_statisticsFragment"
             app:destination="@id/statisticsFragment"
-            app:exitAnim="@anim/fade_out"
-            app:enterAnim="@anim/fade_in"
-            app:popExitAnim="@anim/fade_out"
-            app:popEnterAnim="@anim/fade_in"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"
             app:popUpTo="@+id/statisticsFragment" />
+
+        <action
+            android:id="@+id/action_mainScreenFragment_to_informationFragment"
+            app:destination="@id/informationFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"
+            app:popUpTo="@+id/informationFragment" />
     </fragment>
     <fragment
         android:id="@+id/patterListFragment"
         android:name="ru.alexander.twistthetongue.ui.main.PatterListFragment"
-        android:label="Tongue Twisters"
+        android:label="@string/label_patter_list"
         tools:layout="@layout/fragment_patter_list">
         <action
             android:id="@+id/action_patterListFragment_to_patterFragment"
             app:destination="@id/patterFragment"
-            app:exitAnim="@anim/fade_out"
-            app:enterAnim="@anim/fade_in"
-            app:popExitAnim="@anim/fade_out"
-            app:popEnterAnim="@anim/fade_in"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"
             app:popUpTo="@+id/patterFragment" />
     </fragment>
 
     <fragment
         android:id="@+id/favoriteFragment"
         android:name="ru.alexander.twistthetongue.ui.main.FavoriteListFragment"
-        android:label="Favorites"
+        android:label="@string/label_favorites"
         tools:layout="@layout/fragment_favorites">
 
         <action
             android:id="@+id/action_favoriteListFragment_to_patterFragment"
             app:destination="@id/patterFragment"
-            app:exitAnim="@anim/fade_out"
-            app:enterAnim="@anim/fade_in"
-            app:popExitAnim="@anim/fade_out"
-            app:popEnterAnim="@anim/fade_in"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"
+            app:popUpTo="@+id/patterFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/statisticsFragment"
+        android:name="ru.alexander.twistthetongue.ui.main.StatisticsFragment"
+        android:label="@string/label_statistics"
+        tools:layout="@layout/fragment_statistics">
+        <action
+            android:id="@+id/action_statisticsFragment_to_patterFragment"
+            app:destination="@id/patterFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"
             app:popUpTo="@+id/patterFragment" />
     </fragment>
 
     <fragment
         android:id="@+id/patterFragment"
         android:name="ru.alexander.twistthetongue.ui.main.PatterFragment"
-        android:label="Tongue Twister"
+        android:label="@string/label_patter"
         tools:layout="@layout/twister_view">
         <argument
             android:name="patter"
@@ -79,9 +103,10 @@
     </fragment>
 
 
-    <fragment
-        android:id="@+id/statisticsFragment"
-        android:name="ru.alexander.twistthetongue.ui.main.StatisticsFragment"
-        android:label="Statistics"/>
+
+
+    <fragment android:id="@+id/informationFragment"
+        android:name="ru.alexander.twistthetongue.ui.main.TestFragment"
+        android:label="TEST"/>
 
 </navigation>

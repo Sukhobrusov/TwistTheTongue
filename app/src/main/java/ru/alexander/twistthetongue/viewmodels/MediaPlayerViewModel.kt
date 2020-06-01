@@ -43,8 +43,6 @@ class MediaPlayerViewModel : ViewModel(), VoiceRecorder.Callback {
 
         //voiceRecorder = VoiceRecorder(this)
         //voiceRecorder?.start()
-
-
     }
 
     fun stopRecording() {
@@ -60,13 +58,15 @@ class MediaPlayerViewModel : ViewModel(), VoiceRecorder.Callback {
             //voiceRecorder = null
         }
         recorder = null
+        voiceRecorder = null
     }
 
-    fun startPlaying(fileName: String) {
+    fun startPlaying(fileName: String, onEndPlaying : () -> Unit) {
         player = MediaPlayer().apply {
             try {
                 setDataSource(fileName)
                 prepare()
+                setOnCompletionListener { onEndPlaying() }
                 start()
             } catch (e: IOException) {
                 Log.e(LOG_TAG, "prepare() failed")

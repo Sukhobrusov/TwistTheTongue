@@ -1,37 +1,52 @@
 package ru.alexander.twistthetongue
 
 import android.content.Context
+import android.content.Intent
+import android.content.SharedPreferences
+import android.content.res.Resources
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.TypedValue
-import androidx.activity.viewModels
-import androidx.lifecycle.Observer
-import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
-import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
-import com.google.auth.oauth2.GoogleCredentials
 import kotlinx.android.synthetic.main.toolbar.*
+import kotlinx.android.synthetic.main.toolbar.view.*
 import ru.alexander.twistthetongue.model.LocalInfo
-import ru.alexander.twistthetongue.model.LocalInfo.PREF_ACCESS_TOKEN_EXPIRATION_TIME
-import ru.alexander.twistthetongue.model.LocalInfo.PREF_ACCESS_TOKEN_VALUE
-import ru.alexander.twistthetongue.ui.main.MainFragment
-import ru.alexander.twistthetongue.viewmodels.MainViewModel
 
 
 class MainActivity : AppCompatActivity() {
 
-    lateinit var appBarConfiguration : AppBarConfiguration
+    lateinit var appBarConfiguration: AppBarConfiguration
 
+    var nightMode: Boolean = false
     override fun onCreate(savedInstanceState: Bundle?) {
 
+        val preference = getSharedPreferences(LocalInfo.PREF_NAME, Context.MODE_PRIVATE)
+        nightMode = preference.getBoolean(LocalInfo.PREF_NIGHT_MODE, false)
+        setTheme(
+            if (nightMode) {
+                R.style.DarkTheme
+            } else {
+                R.style.AppTheme
+            }
+        )
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         val navController = findNavController(R.id.nav_host_fragment)
         val appBarConfiguration = AppBarConfiguration((navController.graph))
         toolbar.setupWithNavController(navController, appBarConfiguration)
+        toolbar.nightmodeSwitch.isChecked = nightMode
+        toolbar.nightmodeSwitch.setOnCheckedChangeListener { buttonView, isChecked ->
+            nightMode = isChecked
+
+            preference.edit().putBoolean(LocalInfo.PREF_NIGHT_MODE, nightMode).apply()
+            val intent = Intent(this, this::class.java)
+
+            startActivity(intent)
+            finish()
+
+        }
         //SpeechKit.getInstance().init(applicationContext, "9e82427f-33b9-48be-bdee-84ff91fb7134")
 
 //        val inputStream = resources.openRawResource(R.raw.credential)
@@ -45,6 +60,14 @@ class MainActivity : AppCompatActivity() {
 //        LocalInfo.token = token
 
 
+    }
+
+    override fun getTheme(): Resources.Theme {
+        val theme = super.getTheme()
+        if (nightMode) {
+            theme.applyStyle(R.style.DarkTheme, true)
+        }
+        return theme
     }
 
     override fun onSupportNavigateUp(): Boolean {

@@ -6,70 +6,60 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline50"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.5" />
 
 
     <ru.alexander.twistthetongue.view.MainScreenButtonView
         android:id="@+id/patterListButton"
-        android:layout_width="128dp"
+        android:layout_width="0dp"
         android:layout_height="128dp"
         android:layout_margin="16dp"
         android:background="@drawable/patter_bck"
         android:elevation="12dp"
         android:src="@drawable/ic_view_list"
         android:text="@string/patters"
-        app:layout_constraintEnd_toEndOf="@id/guideline50"
-        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <ru.alexander.twistthetongue.view.MainScreenButtonView
         android:id="@+id/favoritePattersButton"
-        android:layout_width="128dp"
+        android:layout_width="0dp"
         android:layout_height="128dp"
         android:layout_margin="16dp"
         android:background="@drawable/patter_bck"
         android:elevation="12dp"
         android:src="@drawable/ic_star"
         android:text="@string/favorites"
+        app:layout_constraintTop_toBottomOf="@id/patterListButton"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@id/guideline50"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintStart_toStartOf="parent" />
 
 
     <ru.alexander.twistthetongue.view.MainScreenButtonView
         android:id="@+id/statisticsButton"
-        android:layout_width="128dp"
+        android:layout_width="0dp"
         android:layout_height="128dp"
         android:layout_margin="16dp"
         android:background="@drawable/patter_bck"
         android:elevation="12dp"
         android:src="@drawable/ic_check_box"
         android:text="@string/statistics"
-        app:layout_constraintEnd_toEndOf="@id/guideline50"
-        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/patterListButton" />
+        app:layout_constraintTop_toBottomOf="@id/favoritePattersButton"/>
 
     <ru.alexander.twistthetongue.view.MainScreenButtonView
         android:id="@+id/informationButton"
-        android:layout_width="128dp"
+        android:layout_width="0dp"
         android:layout_height="128dp"
         android:layout_margin="16dp"
         android:background="@drawable/patter_bck"
         android:elevation="12dp"
         android:src="@drawable/ic_info"
-        android:text="Info"
+        android:text="@string/info"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@id/guideline50"
-        app:layout_constraintTop_toBottomOf="@id/favoritePattersButton" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/statisticsButton" />
 
     <Space
         android:layout_width="match_parent"

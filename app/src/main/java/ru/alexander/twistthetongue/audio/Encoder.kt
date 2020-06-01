@@ -4,9 +4,7 @@ import android.media.MediaCodec
 import android.media.MediaCodecList
 import android.media.MediaFormat
 import android.util.Log
-import java.io.File
-import java.io.FileInputStream
-import java.io.IOException
+import java.io.*
 
 class Encoder(val buffer : ByteArray,val fileName : String) : MediaCodec.Callback() {
 
@@ -45,6 +43,7 @@ class Encoder(val buffer : ByteArray,val fileName : String) : MediaCodec.Callbac
         codec ?: return
         codec?.setCallback(this)
         codec?.configure(format, null, null, MediaCodec.CONFIGURE_FLAG_ENCODE)
+
     }
 
     fun startEncoding() {
@@ -79,8 +78,16 @@ class Encoder(val buffer : ByteArray,val fileName : String) : MediaCodec.Callbac
         val inputBuffer = codec.getInputBuffer(index)
         // fill inputBuffer with valid data
         inputBuffer?.clear()
-        inputBuffer?.put(buffer)
-        Log.d(LOG_TAG, "")
+        val bis = ByteArrayInputStream(buffer)
+        var bytesCopied: Long = 0
+        val buffer1 = ByteArray(bufferSize)
+        var bytes = bis.read(buffer1)
+        while (bytes >= 0) {
+            inputBuffer?.put(buffer1, 0, bytes)
+            bytesCopied += bytes
+            bytes = bis.read(buffer1)
+        }
+        Log.d(LOG_TAG, "input buffer received")
 
         codec.queueInputBuffer(index,
             0,
